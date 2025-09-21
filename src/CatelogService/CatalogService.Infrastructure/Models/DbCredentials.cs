@@ -2,8 +2,8 @@ namespace CatalogService.Infrastructure.Models;
 
 public class DbCredentials
 {
-    public required string ConnectionString { get; set; }
-    public required string DatabaseName { get; set; }
-    public required string Username { get; set; }
-    public required string Password { get; set; }
+    public string? ConnectionString { get; set; }
+    public string? DatabaseName { get; set; }
+    public string? Username { get; set; }
+    public string? Password { get; set; }
 }
