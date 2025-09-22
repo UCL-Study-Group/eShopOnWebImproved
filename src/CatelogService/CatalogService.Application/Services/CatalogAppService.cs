@@ -4,11 +4,11 @@ using FluentResults;
 
 namespace CatalogService.Application.Services;
 
-public class CatalogService
+public class CatalogAppService
 {
     private readonly MongoRepository<CatalogItem> _repository;
     
-    public CatalogService(MongoRepository<CatalogItem> repository)
+    public CatalogAppService(MongoRepository<CatalogItem> repository)
     {
         _repository = repository;
     }

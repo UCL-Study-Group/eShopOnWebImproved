@@ -1,3 +1,7 @@
+using CatalogService.Application.Services;
+using CatalogService.Infrastructure.Models;
+using CatalogService.Infrastructure.Repositories;
+
 namespace CatalogService.Api;
 
 public class Program
@@ -8,8 +12,13 @@ public class Program
 
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();
+        
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
-        builder.Services.AddScoped<CatalogService>();
+        builder.Services.AddScoped<MongoRepository<CatalogItem>>();
+
+        builder.Services.AddScoped<CatalogAppService>();
 
         var app = builder.Build();
 
@@ -17,6 +26,8 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
 
         app.UseHttpsRedirection();
