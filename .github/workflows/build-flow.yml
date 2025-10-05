@@ -1,9 +1,7 @@
 name: Compile & Build
 
 on: 
-  push:
-  pull_request:
-    branches: [main]
+  workflow_call:
 
 jobs: 
   build:
