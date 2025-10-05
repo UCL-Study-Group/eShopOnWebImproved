@@ -1,0 +1,17 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-flow.yml
+  fast-tests:
+    needs: build
+    uses: ./.github/workflows/fast-tests.yml
+  slow-tests:
+    needs: fast-tests
+    uses: ./.github/workflows/slow-tests.yml

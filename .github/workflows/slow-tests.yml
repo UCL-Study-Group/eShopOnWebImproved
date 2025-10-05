@@ -1,0 +1,45 @@
+name: Slow Tests
+
+on: 
+  workflow_call:
+
+jobs: 
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      has-tests: ${{ steps.check.outputs.has-tests }}
+    steps:
+      - uses: actions/checkout@v5
+      
+      - name: Check for test projects
+        id: check
+        run: |
+          if ls **/*.IntegrationTests.csproj 1> /dev/null 2>&1; then
+            echo "has-tests=true" >> $GITHUB_OUTPUT
+          else
+            echo "has-tests=false" >> $GITHUB_OUTPUT
+          fi
+
+  test:
+    needs: check
+    if: needs.check.outputs.has-tests == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.x
+      
+      - name: Restore dependencies
+        run: dotnet restore
+      
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+      
+      - name: Run unit tests
+        run: |
+          for project in **/*.IntegrationTests.csproj; do
+            dotnet test "$project" --configuration Release --no-build --verbosity normal
+          done
