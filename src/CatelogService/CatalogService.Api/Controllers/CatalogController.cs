@@ -14,7 +14,7 @@ public class CatalogController : Controller
         _catalogService = catalogService;
     }
     
-    [HttpGet("/catalog")]
+    [HttpGet("/Catalog")]
     public async Task<ActionResult<IEnumerable<CatalogItem>>> GetAllAsync()
     {
         var response = await _catalogService.GetAllAsync();
@@ -28,7 +28,7 @@ public class CatalogController : Controller
         return Ok(response.Value);
     }
 
-    [HttpPost("/catalog")]
+    [HttpPost("/Catalog")]
     public async Task<ActionResult> PostAsync([FromBody] CatalogItem item)
     {
         var response = await _catalogService.CreateAsync(item);
