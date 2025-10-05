@@ -4,7 +4,25 @@ on:
   workflow_call:
 
 jobs: 
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      has-tests: ${{ steps.check.outputs.has-tests }}
+    steps:
+      - uses: actions/checkout@v5
+      
+      - name: Check for test projects
+        id: check
+        run: |
+          if ls **/*.Tests.csproj 1> /dev/null 2>&1; then
+            echo "has-tests=true" >> $GITHUB_OUTPUT
+          else
+            echo "has-tests=false" >> $GITHUB_OUTPUT
+          fi
+
   test:
+    needs: check
+    if: needs.check.outputs.has-tests == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -23,5 +41,5 @@ jobs:
       - name: Run unit tests
         run: |
           for project in **/*.Tests.csproj; do
-            dotnet test "$project" --configuration Release --no-build --verbosity normal --logger "trx" --results-directory "TestResults"
+            dotnet test "$project" --configuration Release --no-build --verbosity normal
           done
