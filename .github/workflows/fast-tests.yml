@@ -6,7 +6,6 @@ on:
 jobs: 
   test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v5
       
@@ -22,11 +21,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore
       
       - name: Run unit tests
-        run: dotnet test --configuration Release --no-build --verbosity normal --logger "trx" --results-directory "TestResults"
-      
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: TestResults
+        run: |
+          for project in **/*.Tests.csproj; do
+            dotnet test "$project" --configuration Release --no-build --verbosity normal --logger "trx" --results-directory "TestResults"
+          done
