@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Fast Tests
 
 on: 
   workflow_call:
